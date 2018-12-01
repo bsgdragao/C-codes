@@ -1,0 +1,296 @@
+/*****************************************************************
+ * Exercicio Projeto                                             *
+ * objetivo: Colocar em posordem uma árvore                      *
+ * entrada :  String "DBACEGF ABCDEFG"                           *
+ * saída   : Strings ordenadas                                   *
+ *Autores: Bruno Guerra                                          *
+ *****************************************************************/ 
+
+#include<stdio.h>
+#include<string.h>
+#include <conio.h>
+#include<stdlib.h>    
+#include<locale.h>
+#include <ctype.h>
+
+
+
+typedef struct { // registro
+char charAvore;
+} INFORMACAO;
+
+typedef struct ARV {
+INFORMACAO info; // dados do registro
+struct ARV* subd;// ponteiro para subárvore à direita
+struct ARV* sube;// ponteiro para subárvore à esquerda
+} ARVORE;
+
+
+/***********************************************/ 
+/* Definição das Funções                       */
+/***********************************************/
+void 	insere_recursivo( ARVORE** p, char  );
+void    imprime_ARVORE1  ( ARVORE* aux ); // visualização da árvore em tela, todos os registros
+void    imprime_ARVORE2  ( ARVORE* aux ); // visualização da árvore em tela, todos os registros
+void    imprime_ARVORE3  ( ARVORE* aux ); // visualização da árvore em tela, todos os registros
+void    cria_ARVORE     ( ARVORE** r );  // inicializa árvore com NULL
+int     altura_arvore   ( ARVORE *p );
+
+
+
+
+int main () {
+	
+	setlocale (LC_ALL, "");
+	
+	                            
+    ARVORE* r, *p; // declaração da ARVORE, variável do tipo ARVORE = ARVORE de ponteiros
+    
+    char letras[26], pLetras[26], let;  //Variaveis que receberão a String inteiras e os chars 
+    int quantidade; // Variável que receberá a quantidade da string 
+    
+    cria_ARVORE( &r ); // Função que inicia a árvore;
+    
+    int opt1 = -1; // Int opção do 1º menu
+    
+     do{ // Do do menu // Do para selecionar a opção de entrada da String
+    printf( "\n /---------------------------------------------------/" ); 
+		printf("\n Deseja testar: ");
+		printf("\n1) A STRING: DBACEGF ABCDEFG ");
+		printf("\n2) A STRING: BCAD CBAD ");
+		printf("\n3) A STRING: DBACEGF ");
+		printf("\n4) DIGITE UM STRING QUALQUER. ");
+		printf("\n0) Salvar os dados / menu imprimir \n==> ");
+    	scanf("%i", &opt1 );
+    printf( "\n /---------------------------------------------------/" ); 
+    	
+    	switch(opt1){
+    		
+    		
+    		case 1:
+    			printf("A STRING SERÁ: \nDBACEGF ABCDEFG"); // String Do Uri que será testada
+   				strcpy(pLetras, "DBACEGF ABCDEFG" );
+   
+				break; 
+    			
+    	 	case 2:
+    	 		printf("A STRING SERÁ: \nBCAD CBAD"); // String Do Uri que será testada
+    			strcpy(pLetras, "BCAD CBAD" );
+    
+				break;
+    	 	
+    	 	case 3:
+    	 		printf("A STRING SERÁ: \nDBACEGF"); // String Do Uri que será testada
+    	 		strcpy(pLetras, "DBACEGF" );
+    			
+				break;
+				
+			case 4:
+    	 		printf("DIGITE A STRING QUE SERÁ TESTADA: \n==> "); // função para pegar a String que será testada
+    			fflush(stdin);
+				gets(pLetras); // Variavel que recebe a String digitada
+    			
+				break;
+				
+			case 0:
+				printf("\n Salvando inserções... "); // Print para informar o usuário que o sistema está sendo fechado
+				
+    	 		break;
+    	 		
+    		default: 
+    			printf("\n Opção inválida "); // Print para informar o usuário que o valor digita foi inválido
+    			break;
+		}
+		}while(opt1 != 0); // Saída do laço quando opção for 0
+    
+    
+    
+        
+    	int  contStrOriginal, contStrModificada = 0; // Contador que percorre a String original e contador da String que será modificada
+
+    	for(contStrOriginal = 0; contStrOriginal < strlen(pLetras); contStrOriginal++) { // For que percorre a String original
+        if(pLetras[contStrOriginal] == ' ') // If que verifica se o Char da String é um espaço
+			continue; // Função continue que se o Char for um espaço faz o for parar aqui e começar o laço novamento no próximo indice
+			
+		letras[contStrModificada] = pLetras[contStrOriginal]; // Se não for um espaço o char da string original é copiado para a String Modificada
+		contStrModificada++; // Incremento para percorrer o proximo indice da String modificada
+    	}
+    	
+    		letras[contStrModificada] = '\0'; // Após o for a string é fechada com \0
+
+    
+    
+    quantidade = strlen(letras); // Função para verificar a quantidade de chars
+    
+    for(int i=0 ; i<quantidade ; i++){ // For para desmembrar a String em chars
+       
+    
+		let = letras[i];  // Else que passa os char para as arvores
+		if (let < '!'){  //If para verificar se comando e nulos não foram para inserção.
+			//printf("Caracter menor, não tentrou!!"); // If para verificar se comando e nulos não foram para inserção.
+		}else{
+		
+        //printf("\nLetra que irá para inserção: %c", let); // Print que mostra a letra que está indo para inserção
+		insere_recursivo( &r, let ); // Função insere chamada passando caracter por parametro pela variavel let
+	}
+    	
+	}
+	
+
+	
+    printf ("\n\n"); // Espaço para arrumar a imporessão em tela
+     
+    
+    int opt; // Int da opção menu
+    
+    do{ // Do do menu
+    printf( "\n /---------------------------------------------------/" ); 
+		printf("\n Deseja imprimir: "); 
+		printf( "\n1) Preorder ");
+		printf( "\n2) Inorder ");
+		printf( "\n3) Posorder ");
+		printf( "\n0) Sair ");
+		printf( "\n==> ");
+		scanf("%i", &opt ); // Variavel do menu
+	printf( "\n /---------------------------------------------------/" ); 
+    	
+    	
+    	switch(opt){
+    		
+    		
+    		case 1:
+    			imprime_ARVORE1( r ); // Função imprime arvore pre order
+				break; 
+    			
+    	 	case 2:
+    	 		imprime_ARVORE2( r ); // Função imprime arvore pre in
+				break;
+    	 	
+    	 	case 3:
+    	 		imprime_ARVORE3( r ); // Função imprime arvore pre pos
+				break;
+				
+			case 0:
+				printf("\n Fechando sistema... "); // Print para informar o usuário que o sistema está sendo fechado
+    	 		break;
+    		default: 
+    			printf("\n Opção inválida "); // Print para informar o usuário que o valor digitado foi invalido
+    			break;
+		}
+    	
+	}while(opt!=0);
+	 
+
+	
+	
+	
+ return 0;	
+}
+
+
+/************************************************
+ * cria_ARVORE                                   *
+ * objetivo: rotina para inicializar a ARVORE    *
+ * entrada : nenhuma                             *
+ * saída   : NULL (inicializa ARVORE)            *
+ ************************************************/ 
+void cria_ARVORE( ARVORE** r ){
+    *r = NULL; // arvore criada, raiz nao aponta
+}
+
+/************************************************* 
+ * insere_recursivo                              *
+ * objetivo: rotina para inserir no fim da ARVORE*
+ * entrada : ARVORE e cod                        *
+ * sa?da   : ARVORE com mais um registro         *
+ *************************************************/ 
+void insere_recursivo( ARVORE** p, char let ){
+   if( *p == NULL ){                                     // se não achou o char, insere
+         ARVORE* no = ( ARVORE * ) malloc ( sizeof( ARVORE )); // aloca novo espaco em memória
+         
+         no->subd= NULL;                                 // inicializa subárvore da direita
+         no->sube= NULL;								 // inicializa subárvore da esquerda
+         no->info.charAvore = let; // insere o conteúdo 
+         //printf("\nLetra inserida é: %c", no->info.charAvore); // Print para verificar se o caracter foi inserido corretamente
+		 *p= no;
+		                                          // anterior aponta para novo registro
+   }else
+         if(  let < (*p)->info.charAvore ) { // anda com o ponteiro p para a esquerda, pois o char procurado é menor
+           // printf("\nLetra: %c foi para esquerda", let); // Print para verificar se o caracter foi para o lado correto da inserção
+			 insere_recursivo( &(*p)->sube, let ); 
+			 
+		 
+		 }else{
+		 	
+		 	
+              if( let > (*p)->info.charAvore ){              // verifica se o char a ser inserido é maior que o valor do registro para qual o p aponta
+              //printf("\nLetra: %c foi para direita", let); // Print para verificar se o caracter foi para o lado correto da inserção
+               insere_recursivo( &(*p)->subd, let ); // anda com o ponteiro p para a direita, pois o código procurado é maior 
+                            
+			  }else{
+			  
+                 printf( "." );  
+             }
+                 
+		 }     
+} // desempilha
+
+
+
+
+/**************************************************
+ * imprime_ARVORE                                 *
+ * objetivo: rotina para imprimir dados preorder  *
+ * entrada : ARVORE                               *
+ * sa?da   : nenhuma                              *
+ *************************************************/
+void imprime_ARVORE1 (ARVORE* aux){ //preorder
+    if (aux != NULL) {
+    printf("%c", aux->info.charAvore); 
+    imprime_ARVORE1(aux->sube);
+    imprime_ARVORE1(aux->subd);
+}
+}
+
+
+/**************************************************
+ * imprime_ARVORE                                 *
+ * objetivo: rotina para imprimir dados inorder   *
+ * entrada : ARVORE                               *
+ * sa?da   : nenhuma                              *
+ *************************************************/
+void imprime_ARVORE2 (ARVORE* aux){ //inorder
+if (aux != NULL) {
+    imprime_ARVORE2(aux->sube);
+    
+    printf("%c", aux->info.charAvore); 
+    imprime_ARVORE2(aux->subd);
+}
+}
+
+
+
+
+/**************************************************
+ * imprime_ARVORE                                 *
+ * objetivo: rotina para imprimir dados postorder *
+ * entrada : ARVORE                               *
+ * sa?da   : nenhuma                              *
+ *************************************************/
+void imprime_ARVORE3 (ARVORE* aux){ //postorder
+if (aux != NULL) {
+	 //printf("\nAux é: %c ", aux->info.charAvore); // Print para testar impressão
+    imprime_ARVORE3(aux->sube);
+     //printf("\nLetra: %c foi para esquerda", aux->info.charAvore); // Print para testar impresção
+    imprime_ARVORE3(aux->subd);
+     //printf("\nLetra: %c foi para esquerda", aux->info.charAvore); // Print para testar impressão
+    printf("%c", aux->info.charAvore); 
+}
+}
+
+
+
+
+
+
+
