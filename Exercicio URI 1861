@@ -1,0 +1,514 @@
+/*****************************************************************
+ * Exercicio Projeto                                             *
+ * objetivo: Colocar em posordem uma árvore                      *
+ * entrada :  String "DBACEGF ABCDEFG"                           *
+ * saída   : "DBACEGF ABCDEFG                                    *
+ *Autores: Bruno Guerra, Luan Escobar e Robert Wenitt            *
+ *****************************************************************/ 
+
+#include<stdio.h>
+#include<string.h>
+#include <conio.h>
+#include<stdlib.h>
+#include<locale.h>
+#include <ctype.h>
+
+
+
+typedef struct { // registro
+char charAvore[10];
+int mortos;
+
+} INFORMACAO;
+
+typedef struct ARV {
+INFORMACAO info; // dados do registro
+struct ARV* subd;// ponteiro para subárvore à direita
+struct ARV* sube;// ponteiro para subárvore à esquerda
+} ARVORE;
+
+typedef struct { 
+
+	char Assasinados[10];
+	
+	}PERSONAS;
+
+typedef struct PIL{
+	
+	PERSONAS info;
+	struct PIL* prox;
+			
+}PILHA;
+
+/***********************************************/ 
+/* Definição das Funções                       */
+/***********************************************/
+
+void 	insere_recursivo  ( ARVORE** p, char[10]  );
+void    imprime_ARVORE1   ( ARVORE* aux ); // visualização da árvore em tela, todos os registros
+void    imprime_ARVORE2   ( ARVORE* aux ); // visualização da árvore em tela, todos os registros
+void    imprime_ARVORE3   ( ARVORE* aux ); // visualização da árvore em tela, todos os registros
+void    cria_ARVORE       ( ARVORE** r );  // inicializa árvore com NULL
+void    cria_PILHA        ( PILHA** t );  // inicializa pilha com NULL
+void    separa_Assassinos ( char[20], char [10], char[10] ); // Função que separa Assassinos e Assasinados da String
+void    imprime_pilha     ( PILHA* aux );
+void    salva_assassinados(PILHA** t, char[10] ); // Função que processa os dados.
+
+ARVORE* remove_recursivo  ( ARVORE *p, char [10] ); // Remove os assassinos mortos
+
+
+int main () {
+	
+	setlocale (LC_ALL, "");
+	
+	                            
+    ARVORE* r, *p; // declaração da ARVORE, variável do tipo ARVORE = ARVORE de ponteiros
+    
+    PILHA* t;  // declaração da PILHA, variável do tipo PILHA = pilha de ponteiros
+    
+    char stringOriginal[20], stringAssassino[10], stringAssassinado[10];  //Variaveis que receberão as String 
+    
+    int  contAssassinos=0, contAssassinados=0;
+    	
+cria_ARVORE( &r ); // Função que inicia a árvore;
+cria_PILHA( &t );   // Função que inicia a pilha;
+    
+        
+    int opt1 = -1; // Int opção do 1º menu
+    
+     do{ // Do do menu // Do para selecionar a opção de entrada da String
+    printf( "\n /---------------------------------------------------/" ); 
+    	printf("\n\n Deseja Inserir: ");
+		printf("\n1)STRING: Arya Meryn"); 
+		printf("\n2)STRING: Meryn Syrio");
+		printf("\n3)STRING: Brienne Stannis");
+		printf("\n4)STRING: Ellaria Myrcella");
+		printf("\n5)STRING: Jaime Aerys");
+		printf("\n6)STRING: Brienne Jaime");
+		printf("\n7) DIGITE UM STRING QUALQUER.");
+		printf("\n0) Para salvar os dados e imprimir \n==>");
+    	scanf("%i", &opt1 );
+    printf( "\n /---------------------------------------------------/" ); 
+		 	
+    	switch(opt1){
+    		
+    		
+    		case 1:
+    			printf("\n"); // String Do Uri que será testada
+   				strcpy(stringOriginal, "Arya Meryn" );
+   				separa_Assassinos ( stringOriginal, stringAssassino, stringAssassinado ); // Função que separa da String o Assassino e Assassinado e insere o Assassino na arvore
+   				insere_recursivo (&r, stringAssassino); // Insere os assassinos na arvore. 
+			    salva_assassinados (&t, stringAssassinado ); // Salva os assasinados para comparar e excluir da arvore
+				
+   				
+				break; 
+    			
+    	 	case 2:
+    	 		printf("\n"); // String Do Uri que será testada
+    			strcpy(stringOriginal, "Meryn Syrio" );
+    			separa_Assassinos ( stringOriginal, stringAssassino, stringAssassinado ); // Função que separa da String o Assassino e Assassinado e insere o Assassino na arvore
+   				insere_recursivo (&r, stringAssassino); // Insere os assassinos na arvore. 
+			    salva_assassinados (&t, stringAssassinado ); // Salva os assasinados para comparar e excluir da arvore
+    				
+				break;
+    	 	
+    	 	case 3:
+    	 		printf("\n"); // String Do Uri que será testada
+    	 		strcpy(stringOriginal, "Brienne Stannis" );
+    	 		separa_Assassinos ( stringOriginal, stringAssassino, stringAssassinado ); // Função que separa da String o Assassino e Assassinado e insere o Assassino na arvore
+   				insere_recursivo (&r, stringAssassino); // Insere os assassinos na arvore. 
+			    salva_assassinados (&t, stringAssassinado ); // Salva os assasinados para comparar e excluir da arvore
+						
+				break;
+				
+			case 4:
+    	 		printf("\n"); // função para pegar a String que será testada
+    			strcpy(stringOriginal, "ElIaria Myrcella" );
+    			separa_Assassinos ( stringOriginal, stringAssassino, stringAssassinado ); // Função que separa da String o Assassino e Assassinado e insere o Assassino na arvore
+   				insere_recursivo (&r, stringAssassino); // Insere os assassinos na arvore. 
+			    salva_assassinados (&t, stringAssassinado ); // Salva os assasinados para comparar e excluir da arvore
+						
+				break;
+				
+			case 5:
+    	 		printf("\n"); // função para pegar a String que será testada
+    			strcpy(stringOriginal, "Jaime Aerys" );
+    			separa_Assassinos ( stringOriginal, stringAssassino, stringAssassinado ); // Função que separa da String o Assassino e Assassinado e insere o Assassino na arvore
+   				insere_recursivo (&r, stringAssassino); // Insere os assassinos na arvore. 
+			    salva_assassinados (&t, stringAssassinado ); // Salva os assasinados para comparar e excluir da arvore
+							
+				break;
+				
+			case 6:
+    	 		printf("\n"); // função para pegar a String que será testada
+    			strcpy(stringOriginal, "Brienne Jaime" );
+    			separa_Assassinos ( stringOriginal, stringAssassino, stringAssassinado ); // Função que separa da String o Assassino e Assassinado e insere o Assassino na arvore
+   				insere_recursivo (&r, stringAssassino); // Insere os assassinos na arvore. 
+			    salva_assassinados (&t, stringAssassinado ); // Salva os assasinados para comparar e excluir da arvore
+								
+				break;
+				
+			case 7:
+    	 		printf("\nDIGITE A STRING QUE SERÁ TESTADA: \n==> "); // função para pegar a String que será testada
+    			fflush(stdin);
+				gets(stringOriginal); // Variavel que recebe a String digitada
+				separa_Assassinos ( stringOriginal, stringAssassino, stringAssassinado ); // Função que separa da String o Assassino e Assassinado e insere o Assassino na arvore
+   				insere_recursivo (&r, stringAssassino); // Insere os assassinos na arvore. 
+			    salva_assassinados (&t, stringAssassinado ); // Salva os assasinados para comparar e excluir da arvore
+    			
+				break;
+				
+			case 0:
+				printf("\n Salvando inserções... "); // Print para informar o usuário que o sistema está sendo fechado
+				
+    	 		break;
+    	 		
+    		default: 
+    			printf("\n Opção inválida "); // Print para informar o usuário que o valor digita foi inválido
+    			break;
+		}
+		}while(opt1 != 0); // Saída do laço quando opção for 0
+    
+    
+	
+	
+    printf ("\n\n"); // Espaço para arrumar a imporessão em tela
+    
+    char stringBusca[10]; // String que vai fazer a busca para a exclusão
+    
+		PILHA* aux; // Ponteiro auxiliar da pilha
+		aux = t;
+		
+	
+		
+		while(aux != NULL){  // While que busca e exclui da Arvore Assassinos Assassinados
+		(strcpy(stringBusca, aux->info.Assasinados));
+		
+		remove_recursivo( r, stringBusca); // Remove da arvore recursivo
+		
+		aux = aux->prox; // Ponteiro anda
+	
+		}
+    
+   
+    
+	
+	    
+    int opt; // Int da opção menu
+    
+    do{ // Do do menu
+    printf( "\n\n /---------------------------------------------------/" ); 
+    	printf("\n Deseja imprimir: " );
+		printf( "\n1) Preorder " );
+		printf( "\n2) Inorder " );
+		printf( "\n3) Posorder " );
+		printf( "\n0) Sair \n==>" );
+		scanf("%i", &opt ); // Variavel do menu
+	printf( "\n /---------------------------------------------------/\n" ); 
+    	
+    	switch(opt){
+    		
+    		
+    		case 1:
+    			imprime_ARVORE1( r ); // Função imprime arvore pre order
+				break; 
+    			
+    	 	case 2:
+    	 		imprime_ARVORE2( r ); // Função imprime arvore pre in
+				break;
+    	 	
+    	 	case 3:
+    	 		imprime_ARVORE3( r ); // Função imprime arvore pre pos
+				break;
+				
+			case 0:
+				printf("\n Fechando sistema... "); // Print para informar o usuário que o sistema está sendo fechado
+    	 		break;
+    		default: 
+    			printf("\n Opção inválida "); // Print para informar o usuário que o valor digitado foi invalido
+    			break;
+		}
+    	
+	}while(opt!=0);
+	 
+
+	
+	
+	
+ return 0;	
+}
+
+
+/************************************************
+ * cria_ARVORE                                   *
+ * objetivo: rotina para inicializar a ARVORE    *
+ * entrada : nenhuma                             *
+ * saída   : NULL (inicializa ARVORE)            *
+ ************************************************/ 
+void cria_ARVORE( ARVORE** r ){
+    *r = NULL; // arvore criada, raiz nao aponta
+}
+
+
+/*************************************************
+ * cria_PILHA                                    *
+ * objetivo: rotina para inicializar a PILHA     *
+ * entrada : nenhuma                             *
+ * saída   : NULL (inicializa ARVORE)            *
+ ************************************************/ 
+void cria_PILHA( PILHA** t ){
+    *t = NULL; // arvore criada, raiz nao aponta
+}
+
+
+
+
+/*************************************************
+ * separa_Assinos                                *
+ * objetivo: rotina para inicializar a ARVORE    *
+ * entrada : String                              *
+ * saída   : Duas Strings                        *
+ ************************************************/ 
+void  separa_Assassinos( char *stringOriginal, char *stringAssassino, char *stringAssassinado ){
+	int  contStrOriginal, contStrModificada = 0; // Contador para percorre a String original e contador da String que será modificada
+	char stringAssassinos[10], stringAssassinados[10];
+		for(contStrOriginal = 0; contStrOriginal < strlen(stringOriginal); contStrOriginal++){ // For que irá percorrer a 1º String do Assasasino
+			
+			if (stringOriginal[contStrOriginal] != ' ' ){ // If localizador do espaço
+				stringAssassinos[contStrOriginal] = stringOriginal[contStrOriginal]; // Se não for espaço a String Assassino recebe um char
+					 
+			}else if (stringOriginal[contStrOriginal] == ' ' ){ // Else if condicional do espaço 
+				
+				stringAssassinos[contStrOriginal] = '\0'; // Finaliza a String Assassino
+				
+					int tam = strlen(stringOriginal) - (contStrOriginal +1); // Conta o tamanho da String e ajusta para quantidade restante de caracteres
+				
+				for (contStrModificada = 0; contStrModificada <= tam; contStrModificada++){ // For que irá percorrer a 2º String do Assasasinado
+					
+					if (stringOriginal[contStrOriginal] == ' '){ // Separa o espaço da String Assassinado
+						
+						contStrOriginal++; // Incrementa para o próximo char
+						contStrModificada--; // Decrementa para reinicializar
+						
+					}else{
+				
+						stringAssassinados[contStrModificada] = stringOriginal[contStrOriginal]; // String assassinado recebe um char
+					
+						contStrOriginal++; // Incrementa para o próximo char
+					}
+					
+				
+				}
+			
+					stringAssassinados[contStrModificada+1] = '\0'; 	// Incrementa um char e finaliza a String Assassinados
+			
+			        break; // Sai do for
+			}
+							
+		}
+		
+		strcpy(stringAssassino, stringAssassinos); // String assassino recebe o Assassino para inserir na arvore
+		strcpy(stringAssassinado, stringAssassinados); // String assassinado recebe o morto para salvar na matriz
+	
+	}
+
+
+
+
+
+/************************************************* 
+ * salva_assassinados                            *
+ * objetivo: processar os dados a serem salvos   *
+ * entrada : Pilha e morreu                      *
+ * sa?da   : Pilha com mais um registro          *
+ *************************************************/ 
+void salva_assassinados (PILHA** t, char *stringAssassinado ){
+	
+	PILHA* no = ( PILHA * ) malloc ( sizeof( PILHA ) ); // aloca novo espaco em memoria
+    if( no != NULL ){                                   // verifica se conseguiu alocar memoria para o novo registro
+              no->prox = *t;                            // insere
+              			  
+			  strcpy(no->info.Assasinados, stringAssassinado);
+			  
+			  *t = no;                                  // atualiza o topo                               
+              printf( "\n        Assasinado: %s", (*t)->info.Assasinados ); 
+             
+        } // fim if( no != NULL )
+    else
+        printf( "\n Pilha cheia!" );
+        
+        
+		
+}
+
+/*************************************************
+ * imprime_pilha                                 *
+ * objetivo: rotina para imprimir dados          *
+ * entrada : pilha                               *
+ * saída   : nenhuma                             *
+ ************************************************/ 
+void imprime_pilha( PILHA* aux )
+{
+
+    if( aux == NULL )
+        printf( "\n Underflow - Pilha vazia!" );
+    else {
+         printf("\n\n ---- Relatorio Geral ---- ");    
+         while( aux != NULL ){  // ponteiro auxiliar para a lista
+                printf( "\n Nome.....: %s", aux->info.Assasinados );
+                
+                aux = aux->prox;// aponta para o proximo registro da lista
+         } // fim while( aux != NULL )
+    } // fim if( aux == NULL )  
+}
+
+
+
+
+/************************************************* 
+ * insere_recursivo                              *
+ * objetivo: rotina para inserir no fim da ARVORE*
+ * entrada : ARVORE e String                     *
+ * saída   : ARVORE com mais um registro         *
+ *************************************************/ 
+void insere_recursivo( ARVORE** p, char *stringAssassino ){
+	
+   if( *p == NULL ){                                     // se não achou o nome, insere
+         
+		 ARVORE* no = ( ARVORE * ) malloc ( sizeof( ARVORE )); // aloca novo espaco em memória
+         
+         no->subd= NULL;                                 // inicializa subárvore da direita
+         no->sube= NULL;								 // inicializa subárvore da esquerda
+         strcpy(no->info.charAvore, stringAssassino); // insere o conteúdo 
+         printf("\nInserido Assassino: %s ", no->info.charAvore);
+         
+         *p= no;
+         
+          (*p)->info.mortos+= 1; 
+		 
+		                                          // anterior aponta para novo registro
+   }else
+         if(  strcmp(stringAssassino, (*p)->info.charAvore) == -1 ) { // anda com o ponteiro p para a esquerda, pois o código procurado o menor
+           
+		    insere_recursivo( &(*p)->sube, stringAssassino ); 
+			 
+		 
+		 }else{
+		 	
+		 	
+              if(strcmp( stringAssassino, (*p)->info.charAvore) == 1 ){              // verifica se código a ser inserido é maior que o valor do registro para qual o p aponta
+              
+			  	insere_recursivo( &(*p)->subd, stringAssassino ); // anda com o ponteiro p para a direita, pois o código procurado é maior 
+                            
+			  }else{
+			  	
+			  	(*p)->info.mortos+= 1;
+                printf( "." );  
+             }
+                 
+		 }     
+} // desempilha
+
+
+
+
+
+
+/**************************************************
+ * imprime_ARVORE                                 *
+ * objetivo: rotina para imprimir dados preorder  *
+ * entrada : ARVORE                               *
+ * sa?da   : nenhuma                              *
+ *************************************************/
+void imprime_ARVORE1 (ARVORE* aux){ //preorder
+    if (aux != NULL) {
+    printf("\n%s %i", aux->info.charAvore, aux->info.mortos); 
+    imprime_ARVORE1(aux->sube);
+    imprime_ARVORE1(aux->subd);
+}
+}
+
+
+
+
+
+
+
+/**************************************************
+ * imprime_ARVORE                                 *
+ * objetivo: rotina para imprimir dados inorder   *
+ * entrada : ARVORE                               *
+ * sa?da   : nenhuma                              *
+ *************************************************/
+void imprime_ARVORE2 (ARVORE* aux){ //inorder
+if (aux != NULL) {
+	 
+    imprime_ARVORE2(aux->sube);
+    printf("\n%s %i", aux->info.charAvore, aux->info.mortos); 
+    imprime_ARVORE2(aux->subd);
+    
+}
+}
+
+
+
+
+/**************************************************
+ * imprime_ARVORE                                 *
+ * objetivo: rotina para imprimir dados postorder *
+ * entrada : ARVORE                               *
+ * sa?da   : nenhuma                              *
+ *************************************************/
+void imprime_ARVORE3 (ARVORE* aux){ //postorder
+if (aux != NULL) {
+	 imprime_ARVORE3(aux->sube);
+     imprime_ARVORE3(aux->subd);
+     printf("\n%s %i", aux->info.charAvore, aux->info.mortos); 
+}
+}
+
+
+
+
+
+
+/***********************************************************
+ * remove_recursivo                                        *
+ * objetivo: rotina para remover os assassinos assasinados *
+ * entrada : ARVORE e string                               *
+ * saída   : ARVORE com registro removido                  *
+ ***********************************************************/ 
+ARVORE* remove_recursivo( ARVORE *p, char *stringBusca ){
+	 if( p == NULL )
+	     return NULL;
+	 else 
+	     if(strcmp(p->info.charAvore, stringBusca ) == 1)    // procura o código pela esquerda
+			 p->sube= remove_recursivo( p->sube, stringBusca );
+         else
+		     if( strcmp(p->info.charAvore, stringBusca ) == -1) // procura o código pela esquerda
+				 p->subd= remove_recursivo( p->subd, stringBusca );
+			 else{                      // achou o nó e este não tem filhos
+				 if( p->sube == NULL && p->subd == NULL ){
+					 free( p );
+					 p= NULL;
+				 }else                  // achou o nó e este tem filho à direita
+					 if( p->sube == NULL ){
+						 ARVORE* aux= p;
+						 p= p->subd;
+						 free( aux );
+					 }else              // achou o nó e este tem filho à esquerda
+					     if( p->subd == NULL ){
+							 ARVORE* aux= p;
+							 p= p->sube;
+							 free( aux );
+						 }else{         // achou o nó e este tem os dois filhos
+							 ARVORE* aux2 = p->sube;     // procura o maior da esquerda
+							 while( aux2->subd != NULL )  
+							 		aux2= aux2->subd;
+							 p->info = aux2->info;        // troca as informações
+							 (strcpy(aux2->info.charAvore, stringBusca ));
+							 p->sube = remove_recursivo( p->sube, stringBusca );
+						 }
+			 }
+ return p;
+}
