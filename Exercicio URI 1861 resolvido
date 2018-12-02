@@ -3,7 +3,7 @@
  * objetivo: Colocar em posordem uma árvore                      *
  * entrada :  String "DBACEGF ABCDEFG"                           *
  * saída   : "DBACEGF ABCDEFG                                    *
- *Autores: Bruno Guerra, Luan Escobar e Robert Wenitt            *
+ *Autores: B                               Guerra                *
  *****************************************************************/ 
 
 #include<stdio.h>
